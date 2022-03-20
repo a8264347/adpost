@@ -1,0 +1,33 @@
+version: '3'
+services:
+  nginx:
+    image: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - php:php
+    volumes:
+      - "/data/conf.d:/etc/nginx/conf.d"
+      - "/data/www:/data/www"
+  php:
+    image: itwmw/php:7.4-fpm
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - "/data/www:/data/www"
+    links:
+      - mysql:mysql
+      - redis:redis
+  mysql:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    volumes:
+      - "/data/mysql8:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
